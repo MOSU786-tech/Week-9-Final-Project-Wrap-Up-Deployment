@@ -1,39 +1,66 @@
-// Mentor map: Legacy post card for earlier lab routes.
-// Why it exists: Displays one post and supports incrementing bet count.
-// Used by: ReadPosts page.
-import { useState } from 'react'
-import './Card.css'
-import more from './more.png'
-import { Link } from 'react-router-dom'
-import { supabase } from '../client'
+import { Link } from 'react-router-dom';
+import './Card.css';
+import { formatPostTime, isYouTubeLink, toYouTubeEmbed } from '../utils/postHelpers';
 
-
-const Card = (props) =>  {
-
-  const [count, setCount] = useState(props.betCount ?? 0)
-
-  const updateCount = async (event) => {
-    event.preventDefault()
-
-    const nextCount = count + 1
-
-    await supabase
-      .from('Posts')
-      .update({ betCount: nextCount })
-      .eq('id', props.id)
-
-    setCount(nextCount)
-  }
+const Card = ({ post, settings, onUpvote }) => {
+  const embedUrl = isYouTubeLink(post.video_url) ? toYouTubeEmbed(post.video_url) : '';
 
   return (
-      <div className="Card">
-          <Link to={'edit/'+ props.id}><img className="moreButton" alt="edit button" src={more} /></Link>
-          <h2 className="title">{props.title}</h2>
-          <h3 className="author">{"by " + props.author}</h3>
-          <p className="description">{props.description}</p>
-          <button className="betButton" onClick={updateCount} >👍 Bet Count: {count}</button>
+    <article className="post-card">
+      <div className="post-card__header">
+        <div>
+          <p className="post-card__flag">{post.flag}</p>
+          <h3>{post.title}</h3>
+        </div>
+        <Link className="inline-button" to={`/posts/${post.id}`}>
+          Open Thread
+        </Link>
       </div>
+
+      <p className="post-card__meta">
+        by {post.author_label} • {post.characteristic} • {formatPostTime(post.created_at)}
+      </p>
+
+      {settings.showContent ? <p className="post-card__content">{post.description}</p> : null}
+
+      {settings.showImage && post.image_url ? (
+        <img className="post-card__image" src={post.image_url} alt={`Attached by ${post.author_label}`} />
+      ) : null}
+
+      {embedUrl ? (
+        <div className="video-frame-wrap">
+          <iframe
+            title={`Video for ${post.title}`}
+            src={embedUrl}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      ) : null}
+
+      {!embedUrl && post.video_url ? (
+        <a className="direct-link" href={post.video_url} target="_blank" rel="noreferrer">
+          Open shared video
+        </a>
+      ) : null}
+
+      {post.repost ? (
+        <div className="post-card__repost">
+          <p>Repost thread reference: #{post.repost.id}</p>
+          <Link className="card-link" to={`/posts/${post.repost.id}`}>
+            {post.repost.title}
+          </Link>
+        </div>
+      ) : null}
+
+      <div className="post-card__footer">
+        <button className="inline-button" onClick={() => onUpvote(post.id, post.betCount + 1)}>
+          👍 Bet Count: {post.betCount}
+        </button>
+        <span>{post.commentCount} comments</span>
+      </div>
+    </article>
   );
 };
 
-export default Card
+export default Card;

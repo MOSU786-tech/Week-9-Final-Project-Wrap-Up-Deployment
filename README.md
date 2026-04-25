@@ -1,10 +1,10 @@
 <!-- Mentor map: Project submission doc with rubric coverage, walkthrough, and setup context. -->
 
-# Web Development Project 7 - Crewmates HQ
+# Web Development Final Project - Crewmates HQ + Challenge Feed
 
 Submitted by: **Mohammad Sultan**
 
-This web app: **A Supabase-powered crewmate manager where users can create, view, update, and delete crewmates. The app includes unique detail pages per crewmate, category-based attribute restrictions, summary statistics, and a custom crew success metric that changes the gallery presentation.**
+This web app: **A Supabase-powered two-part app with Week 8 Crewmates CRUD plus Week 9 final challenge threads. Users can create, view, update, and delete crewmates, then create threaded challenge posts with comments, image uploads, video sharing, post flags, repost references, loading states, and pseudo-auth protection for edit/delete.**
 
 Time spent: **8** hours spent in total
 
@@ -46,6 +46,42 @@ The following **additional** features are implemented:
 - [x] Readiness label and score for each crewmate
 - [x] Shareable URL display on each crewmate detail page
 - [x] Polished responsive UI with custom styling and accessibility-friendly keyboard navigation on crewmate cards
+
+## Week 9 Final Features
+
+The following Week 9 final features are implemented:
+
+- [x] Week 8 CRUD app remains intact and fully usable
+- [x] Deploy-ready app structure for Netlify hosting
+- [x] Pseudo-authentication with random session user ID assigned on launch
+- [x] Secret key protection for post update/delete and comment delete actions
+- [x] Author-only post editing and deleting (must be original session user)
+- [x] Repost support by referencing previous post ID
+- [x] Thread linkage showing referenced post on detail page
+- [x] Interface customization for feed theme and content/image visibility
+- [x] Additional post characteristics field
+- [x] Web video sharing (YouTube embed + direct links)
+- [x] Post flags (Question, Opinion, Showcase, Resource)
+- [x] Feed filtering by flag
+- [x] Local image upload via Supabase Storage
+- [x] Loading animation while fetching posts/thread data
+
+## Netlify Deployment
+
+1. Create a new site in Netlify from this GitHub repo.
+2. Build command: `npm run build`
+3. Publish directory: `dist`
+4. Add environment variables in Netlify:
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+- `VITE_SUPABASE_TABLE` (optional, defaults to `Crewmates`)
+- `VITE_SUPABASE_POSTS_TABLE` (optional, defaults to `Posts`)
+- `VITE_SUPABASE_COMMENTS_TABLE` (optional, defaults to `Comments`)
+- `VITE_SUPABASE_MEDIA_BUCKET` (optional, defaults to `post-media`)
+
+5. In Supabase SQL editor, run `supabase-setup.sql` once.
+6. Redeploy the site and test all routes.
 
 ## Video Walkthrough
 

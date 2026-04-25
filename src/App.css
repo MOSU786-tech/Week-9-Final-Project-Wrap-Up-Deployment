@@ -20,17 +20,17 @@
   max-width: 1180px;
   margin: 0 auto 32px;
   padding: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--border-strong);
   border-radius: 28px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
-    rgba(8, 18, 30, 0.78);
+    linear-gradient(135deg, var(--surface-glass), color-mix(in srgb, var(--surface-glass) 75%, transparent)),
+    var(--surface-panel);
   backdrop-filter: blur(16px);
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   gap: 24px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 20px 56px var(--shadow-soft);
 }
 
 .brand-block {
@@ -64,7 +64,7 @@
 .nav-link {
   padding: 12px 18px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--border-strong);
   color: var(--muted-text);
   transition:
     transform 180ms ease,
@@ -76,15 +76,15 @@
 .nav-link:hover,
 .nav-link:focus-visible {
   color: var(--text-main);
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: color-mix(in srgb, var(--accent-gold) 40%, var(--border-strong));
   transform: translateY(-1px);
 }
 
 .nav-link--active {
-  color: #0a1017;
-  background: linear-gradient(135deg, var(--accent-gold), #ffb347);
+  color: #013344;
+  background: linear-gradient(135deg, #68f1ff, #00cde2);
   border-color: transparent;
-  box-shadow: 0 16px 36px rgba(255, 196, 92, 0.25);
+  box-shadow: 0 14px 30px rgba(0, 168, 201, 0.26);
 }
 
 .ambient-orb {
@@ -101,7 +101,7 @@
   height: 300px;
   top: -70px;
   right: -60px;
-  background: radial-gradient(circle, rgba(244, 185, 66, 0.85), rgba(244, 185, 66, 0));
+  background: radial-gradient(circle, rgba(58, 226, 255, 0.72), rgba(58, 226, 255, 0));
 }
 
 .ambient-orb--two {
@@ -109,7 +109,7 @@
   height: 360px;
   bottom: -100px;
   left: -80px;
-  background: radial-gradient(circle, rgba(44, 177, 161, 0.52), rgba(44, 177, 161, 0));
+  background: radial-gradient(circle, rgba(0, 194, 218, 0.5), rgba(0, 194, 218, 0));
 }
 
 .page-section {
@@ -121,11 +121,11 @@
 .panel {
   padding: 28px;
   border-radius: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--border-strong);
   background:
-    linear-gradient(140deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
-    rgba(7, 15, 24, 0.78);
-  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.28);
+    linear-gradient(140deg, var(--surface-glass), color-mix(in srgb, var(--surface-glass) 80%, transparent)),
+    var(--surface-panel);
+  box-shadow: 0 16px 44px var(--shadow-soft);
 }
 
 .hero-grid {
@@ -186,8 +186,8 @@
 
 .secondary-button {
   color: var(--text-main);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--surface-card);
+  border: 1px solid var(--border-strong);
 }
 
 .danger-button {
@@ -199,7 +199,7 @@
 .inline-button {
   padding: 10px 16px;
   color: var(--text-main);
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--surface-card);
 }
 
 .primary-button:hover,
@@ -231,8 +231,8 @@
 .metric-card {
   padding: 18px;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface-card);
+  border: 1px solid var(--border-strong);
 }
 
 .metric-card strong {
@@ -253,7 +253,24 @@
 .status-banner {
   padding: 14px 18px;
   border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-strong);
+}
+
+.mode-toggle {
+  border: 1px solid var(--border-strong);
+  background: var(--surface-card);
+  color: var(--text-main);
+  border-radius: 999px;
+  padding: 12px 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.mode-toggle:hover,
+.mode-toggle:focus-visible {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent-gold) 45%, var(--border-strong));
 }
 
 .status-banner--info {

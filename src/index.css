@@ -1,15 +1,36 @@
 /* Mentor map: Global baseline variables and reset styles for the full app. */
 /* Used by: Loaded once in src/index.jsx before the app renders. */
 :root {
-  color-scheme: dark;
-  --text-main: #f7f2e8;
-  --muted-text: #b9c5d2;
-  --accent-gold: #f4b942;
-  --accent-teal: #2cb1a1;
-  --panel-line: rgba(255, 255, 255, 0.12);
+  color-scheme: light;
+  --text-main: #083447;
+  --muted-text: #2d6c82;
+  --accent-gold: #00abc4;
+  --accent-teal: #00c8c8;
+  --panel-line: rgba(9, 96, 126, 0.2);
+  --surface-glass: rgba(255, 255, 255, 0.82);
+  --surface-panel: rgba(236, 253, 255, 0.88);
+  --surface-card: rgba(255, 255, 255, 0.7);
+  --surface-input: rgba(255, 255, 255, 0.9);
+  --border-strong: rgba(0, 128, 158, 0.2);
+  --shadow-soft: rgba(0, 131, 164, 0.2);
   font-family: 'Trebuchet MS', 'Avenir Next', 'Segoe UI', sans-serif;
   line-height: 1.5;
   font-weight: 400;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --text-main: #f3fbff;
+  --muted-text: #b2d6e2;
+  --accent-gold: #4fe7ff;
+  --accent-teal: #25d8d8;
+  --panel-line: rgba(255, 255, 255, 0.18);
+  --surface-glass: rgba(14, 29, 43, 0.82);
+  --surface-panel: rgba(10, 24, 36, 0.82);
+  --surface-card: rgba(20, 38, 53, 0.78);
+  --surface-input: rgba(17, 33, 46, 0.9);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --shadow-soft: rgba(0, 0, 0, 0.34);
 }
 
 * {
@@ -26,16 +47,24 @@ body {
   min-height: 100vh;
   color: var(--text-main);
   background:
-    radial-gradient(circle at top, rgba(44, 177, 161, 0.16), transparent 32%),
-    radial-gradient(circle at 80% 0%, rgba(244, 185, 66, 0.15), transparent 25%),
-    linear-gradient(180deg, #09111a 0%, #06131d 52%, #09131b 100%);
+    radial-gradient(circle at 12% -2%, rgba(77, 169, 224, 0.18), transparent 34%),
+    radial-gradient(circle at 82% -8%, rgba(34, 114, 184, 0.2), transparent 32%),
+    linear-gradient(180deg, #11243b 0%, #0a1d32 52%, #071629 100%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root[data-theme='dark'] body {
+  background:
+    radial-gradient(circle at top, rgba(43, 117, 190, 0.2), transparent 32%),
+    radial-gradient(circle at 80% 0%, rgba(22, 82, 154, 0.18), transparent 28%),
+    linear-gradient(180deg, #081322 0%, #050d19 52%, #02070f 100%);
+}
+
 button,
 input,
-textarea {
+textarea,
+select {
   font: inherit;
 }
 

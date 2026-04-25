@@ -32,8 +32,8 @@
   width: 100%;
   padding: 14px 16px;
   border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-input);
   color: var(--text-main);
 }
 
@@ -75,8 +75,8 @@
   min-height: 76px;
   padding: 14px;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-card);
   color: var(--text-main);
   text-align: left;
 }
@@ -118,8 +118,8 @@
   width: 54px;
   height: 54px;
   border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-card);
   color: var(--text-main);
   font-weight: 700;
 }
@@ -163,8 +163,8 @@
   gap: 8px;
   padding: 10px 14px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface-card);
+  border: 1px solid var(--border-strong);
 }
 
 .preview-stats {
@@ -176,7 +176,7 @@
 .preview-stats div {
   padding: 16px;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--surface-card);
 }
 
 .preview-stats span,

@@ -1,60 +1,84 @@
-/* Mentor map: Legacy card styling for Posts list cards. */
+/* Mentor map: Post card styling for the Week 9 forum feed. */
 /* Used by: src/components/Card.jsx. */
-.Card {
-    backdrop-filter: blur(2px);
-    border: 1px solid rgba(153, 153, 153, 0.497);
-    border-radius: 20px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-right: 10px;
-    margin-bottom: 25px;
-    width: 400px;
-    text-align: center;
+.post-card {
+    display: grid;
+    gap: 14px;
+    padding: 20px;
+    border-radius: 22px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-panel);
+    box-shadow: 0 14px 40px var(--shadow-soft);
 }
 
-.title {
-    color:white;
-    padding-left:30px;
-    font-size: 24px;
+.post-card h3 {
+    margin: 0;
 }
 
-.author {
-    color:white;
-    margin-bottom: 20px;
-    font-size: 20px;
+.post-card__header,
+.post-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
-.description {
-    color:white;  
-    text-align: justify;
-    text-justify: inter-word;
-    padding-left: 30px;
-    padding-right: 30px;
-    margin-bottom: 20px;
-    font-size: 15px;
+.post-card__flag {
+    margin: 0 0 8px;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.76rem;
 }
 
-.betButton {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 15px;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: #1a1a1a;
-    color:white;
-    cursor: pointer;
-    transition: border-color 0.25s;
+.post-card__meta {
+    margin: 0;
+    color: var(--muted-text);
+    font-size: 0.94rem;
 }
-.betButton:hover {
-    border-color: #646cff;
-  }
 
-.moreButton {
-    width: 30px;
-    float:right;
-
+.post-card__content {
+    margin: 0;
+    color: #f4f1e7;
+    white-space: pre-wrap;
 }
-.moreButton:hover {
-    cursor: pointer;
+
+.post-card__image {
+    width: 100%;
+    max-height: 320px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 1px solid var(--border-strong);
+}
+
+.post-card__repost {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding: 14px;
+    border-radius: 14px;
+    background: var(--surface-card);
+    border: 1px dashed var(--border-strong);
+}
+
+.post-card__repost p {
+    margin: 0;
+    color: var(--muted-text);
+}
+
+.video-frame-wrap {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border-strong);
+}
+
+.video-frame-wrap iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
 }

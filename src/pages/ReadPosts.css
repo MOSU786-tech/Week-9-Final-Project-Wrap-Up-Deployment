@@ -1,9 +1,112 @@
-/* Mentor map: Legacy posts grid layout styling. */
-/* Used by: src/pages/ReadPosts.jsx. */
+/* Mentor map: Layout and controls for the Week 9 challenge feed and thread UI. */
+/* Used by: ReadPosts and PostDetailPage via shared class names. */
 .ReadPosts {
     display: grid;
-    grid-auto-flow: row;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.post-feed {
+    --post-accent: #f4b942;
+}
+
+.post-feed--sunrise {
+    --post-accent: #f4b942;
+}
+
+.post-feed--teal {
+    --post-accent: #2cb1a1;
+}
+
+.post-feed--ember {
+    --post-accent: #ff8761;
+}
+
+.post-feed .eyebrow,
+.post-feed .section-title {
+    color: var(--post-accent);
+}
+
+.post-controls {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.post-controls label {
+    display: grid;
+    gap: 8px;
+    color: var(--muted-text);
+    font-weight: 600;
+}
+
+.checkbox-inline {
+    align-self: end;
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-inline input {
+    width: 18px;
+    height: 18px;
+}
+
+.loading-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+}
+
+.loading-spinner {
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    animation: spin 900ms linear infinite;
+}
+
+.comment-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.comment-card {
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.comment-card p {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.comment-card__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    color: var(--muted-text);
+    font-size: 0.88rem;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 900px) {
+    .ReadPosts,
+    .post-controls {
+        grid-template-columns: 1fr;
+    }
 }
 

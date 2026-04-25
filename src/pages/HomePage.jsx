@@ -13,7 +13,8 @@ const HomePage = () => {
           <p>
             This app lets you create crewmates, assign their stats by clicking preset values,
             review the full gallery sorted by newest first, and jump into unique detail or edit
-            pages for every recruit.
+            pages for every recruit. It also includes a complete Week 9 challenge thread feed with
+            pseudo-authenticated editing, threaded reposts, and media sharing.
           </p>
 
           <div className="action-row">
@@ -22,6 +23,9 @@ const HomePage = () => {
             </Link>
             <Link className="secondary-button" to="/crew">
               Browse the crew gallery
+            </Link>
+            <Link className="secondary-button" to="/posts">
+              Open challenge feed
             </Link>
           </div>
         </div>
@@ -45,6 +49,10 @@ const HomePage = () => {
               <span>Update and delete</span>
               <strong>Supabase changes reflected as soon as you save</strong>
             </div>
+            <div className="detail-item">
+              <span>Week 9 wrap-up</span>
+              <strong>Posts, comments, pseudo-auth, flags, videos, and image upload</strong>
+            </div>
           </div>
         </div>
       </div>
@@ -64,7 +72,7 @@ const HomePage = () => {
         </div>
         <div className="metric-card">
           <span>Routes</span>
-          <strong>5 pages</strong>
+          <strong>9+ pages</strong>
         </div>
       </div>
     </section>

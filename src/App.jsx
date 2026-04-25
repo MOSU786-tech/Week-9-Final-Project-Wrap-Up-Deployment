@@ -2,16 +2,38 @@
 // Why it exists: Defines navigation and binds URLs to page components.
 // Used by: src/index.jsx as the root React component.
 import './App.css';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink, useRoutes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import CrewGalleryPage from './pages/CrewGalleryPage';
 import CreateCrewmatePage from './pages/CreateCrewmatePage';
 import CrewmateDetailPage from './pages/CrewmateDetailPage';
 import EditCrewmatePage from './pages/EditCrewmatePage';
+import ReadPosts from './pages/ReadPosts';
+import CreatePost from './pages/CreatePost';
+import EditPost from './pages/EditPost';
+import PostDetailPage from './pages/PostDetailPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const App = () => {
+  const [themeMode, setThemeMode] = useState(() => {
+    if (typeof window === 'undefined') {
+      return 'light';
+    }
+
+    const stored = window.localStorage.getItem('crewmates_theme_mode');
+    if (stored === 'dark' || stored === 'light') {
+      return stored;
+    }
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', themeMode);
+    window.localStorage.setItem('crewmates_theme_mode', themeMode);
+  }, [themeMode]);
+
   const element = useRoutes([
     {
       path: '/',
@@ -34,6 +56,22 @@ const App = () => {
       element: <EditCrewmatePage />,
     },
     {
+      path: '/posts',
+      element: <ReadPosts />,
+    },
+    {
+      path: '/posts/new',
+      element: <CreatePost />,
+    },
+    {
+      path: '/posts/:id',
+      element: <PostDetailPage />,
+    },
+    {
+      path: '/posts/:id/edit',
+      element: <EditPost />,
+    },
+    {
       path: '*',
       element: <NotFoundPage />,
     },
@@ -48,7 +86,7 @@ const App = () => {
       <div className="ambient-orb ambient-orb--two" />
       <header className="topbar">
         <div className="brand-block">
-          <p className="eyebrow">Week 8 Project</p>
+          <p className="eyebrow">Week 9 Final Project</p>
           <NavLink className="brand-link" to="/">
             <h1>Crewmates HQ</h1>
           </NavLink>
@@ -67,6 +105,17 @@ const App = () => {
           <NavLink className={navClassName} to="/create">
             Create Crewmate
           </NavLink>
+          <NavLink className={navClassName} to="/posts">
+            Challenge Feed
+          </NavLink>
+          <button
+            type="button"
+            className="mode-toggle"
+            onClick={() => setThemeMode((current) => (current === 'light' ? 'dark' : 'light'))}
+            aria-label={`Switch to ${themeMode === 'light' ? 'dark' : 'light'} mode`}
+          >
+            {themeMode === 'light' ? 'Dark Mode' : 'Light Mode'}
+          </button>
         </nav>
       </header>
 
