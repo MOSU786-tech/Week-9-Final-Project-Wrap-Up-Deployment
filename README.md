@@ -68,7 +68,7 @@ The following **additional** features are implemented:
 
 ## Video Walkthrough
 
-![Video Walkthrough](https://raw.githubusercontent.com/MOSU786-tech/Week-9-Final-Project-Wrap-Up-Deployment/main/walkthrough.gif)
+<img src="walkthrough.gif" title="Video Walkthrough" alt="Video Walkthrough" />
 
 ## Notes
 
