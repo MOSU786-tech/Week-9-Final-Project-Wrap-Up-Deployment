@@ -1,8 +1,11 @@
+// Mentor map: Reusable feed card for each post row.
+// Why it exists: Keeps feed rendering simple and consistent across all posts.
 import { Link } from 'react-router-dom';
 import './Card.css';
 import { formatPostTime, isYouTubeLink, toYouTubeEmbed } from '../utils/postHelpers';
 
 const Card = ({ post, settings, onUpvote }) => {
+  // Mentor tip: Convert YouTube links to embed URLs once, then use conditional UI blocks.
   const embedUrl = isYouTubeLink(post.video_url) ? toYouTubeEmbed(post.video_url) : '';
 
   return (

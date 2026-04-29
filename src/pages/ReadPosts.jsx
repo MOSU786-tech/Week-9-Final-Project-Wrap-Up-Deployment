@@ -8,20 +8,26 @@ import {
     loadFeedSettings,
     saveFeedSettings,
 } from '../utils/postHelpers';
-import { getOrCreateSessionUser, resetSessionUser } from '../utils/sessionUser';
+import { getOrCreateSessionUser, resetSessionUser, setSessionUserLabel } from '../utils/sessionUser';
 import { formatSupabaseError } from '../utils/supabaseErrors';
 
+// Mentor map: Main challenge-feed page with filters, profile controls, and metrics.
 const ReadPosts = () => {
+    // Pseudo-auth user ID behaves like a lightweight identity for ownership rules.
     const [sessionUser, setSessionUser] = useState(() => getOrCreateSessionUser());
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
     const [selectedFlag, setSelectedFlag] = useState('All');
     const [feedSettings, setFeedSettings] = useState(() => loadFeedSettings());
+    // Local input state lets users preview/edit their display name before saving.
+    const [displayNameInput, setDisplayNameInput] = useState(() => getOrCreateSessionUser().label);
+    const [profileMessage, setProfileMessage] = useState('');
 
     const fetchPosts = async () => {
         setLoading(true);
 
+        // Step 1: get posts in newest-first order for feed UX.
         const { data: postRows, error: postsError } = await supabase
             .from(POSTS_TABLE)
             .select('*')
@@ -35,6 +41,9 @@ const ReadPosts = () => {
         }
 
         const rows = postRows ?? [];
+
+        // Step 2: gather referenced post IDs once, then batch-load them.
+        // This avoids one extra query per post.
         const repostIds = [...new Set(rows.map((post) => post.repost_of).filter(Boolean))];
 
         let repostMap = {};
@@ -50,6 +59,7 @@ const ReadPosts = () => {
             }, {});
         }
 
+        // Step 3: compute comment counts client-side for a lightweight dashboard metric.
         const { data: comments } = await supabase.from(COMMENTS_TABLE).select('post_id');
         const commentCounts = (comments ?? []).reduce((accumulator, current) => {
             const next = accumulator;
@@ -61,6 +71,7 @@ const ReadPosts = () => {
         setPosts(
             rows.map((row) => ({
                 ...row,
+                // Attach denormalized helper data for rendering convenience.
                 repost: row.repost_of ? repostMap[row.repost_of] ?? null : null,
                 commentCount: commentCounts[row.id] ?? 0,
             })),
@@ -81,6 +92,8 @@ const ReadPosts = () => {
     }, [posts, selectedFlag]);
 
     const handleUpvote = async (id, count) => {
+        // Mentor tip:
+        // Update DB first, then mirror in local state to keep feed responsive.
         const { error } = await supabase.from(POSTS_TABLE).update({ betCount: count }).eq('id', id);
         if (!error) {
             setPosts((current) =>
@@ -92,6 +105,15 @@ const ReadPosts = () => {
     const updateSettings = (next) => {
         setFeedSettings(next);
         saveFeedSettings(next);
+    };
+
+    const handleDisplayNameSave = (event) => {
+        event.preventDefault();
+        // Mentor tip: Write to localStorage through one utility so identity logic stays centralized.
+        const updated = setSessionUserLabel(displayNameInput);
+        setSessionUser(updated);
+        setDisplayNameInput(updated.label);
+        setProfileMessage(`Display name saved as ${updated.label}.`);
     };
 
     return (
@@ -107,11 +129,30 @@ const ReadPosts = () => {
                     </div>
 
                     <div className="action-row">
+                        <form className="display-name-form" onSubmit={handleDisplayNameSave}>
+                            <label htmlFor="displayName">Set display name</label>
+                            <div className="display-name-form__controls">
+                                <input
+                                    id="displayName"
+                                    type="text"
+                                    value={displayNameInput}
+                                    onChange={(event) => setDisplayNameInput(event.target.value)}
+                                    placeholder="Pilot-SULTAN"
+                                    maxLength={30}
+                                />
+                                <button className="secondary-button" type="submit">
+                                    Save Name
+                                </button>
+                            </div>
+                        </form>
+
                         <button
                             className="secondary-button"
                             onClick={() => {
                                 const nextUser = resetSessionUser();
                                 setSessionUser(nextUser);
+                                setDisplayNameInput(nextUser.label);
+                                setProfileMessage('Generated a fresh session user and ID.');
                             }}
                         >
                             Regenerate User ID
@@ -121,6 +162,8 @@ const ReadPosts = () => {
                         </Link>
                     </div>
                 </div>
+
+                {profileMessage ? <div className="status-banner status-banner--success">{profileMessage}</div> : null}
 
                 <div className="post-controls">
                     <label>

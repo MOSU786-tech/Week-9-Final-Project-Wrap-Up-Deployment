@@ -35,9 +35,11 @@ const CreatePost = () => {
 
     const uploadImage = async () => {
         if (!imageFile) {
-            return '';
+            return { imageUrl: '', warningMessage: '' };
         }
 
+        // Mentor tip:
+        // Prefixing with session user ID keeps uploads organized per pseudo-user.
         const cleanName = imageFile.name.replace(/\s+/g, '-').toLowerCase();
         const path = `${sessionUser.id}/${Date.now()}-${cleanName}`;
 
@@ -46,16 +48,25 @@ const CreatePost = () => {
             .upload(path, imageFile, { upsert: true });
 
         if (uploadError) {
+            if (uploadError.message?.toLowerCase().includes('bucket') || uploadError.statusCode === '404') {
+                return {
+                    imageUrl: '',
+                    warningMessage:
+                        'Image upload was skipped because the Supabase storage bucket is missing. The post can still be created.',
+                };
+            }
+
             throw uploadError;
         }
 
         const { data } = supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path);
-        return data.publicUrl;
+        return { imageUrl: data.publicUrl, warningMessage: '' };
     };
 
     const createPost = async (event) => {
         event.preventDefault();
 
+        // Step 1: Validate required fields early for fast user feedback.
         if (!post.title.trim() || !post.description.trim()) {
             setStatusTone('error');
             setStatusMessage('Title and description are required.');
@@ -68,7 +79,10 @@ const CreatePost = () => {
             return;
         }
 
-        if (post.repostPostId && !isPositiveIntegerString(post.repostPostId)) {
+        const normalizedRepostValue = post.repostPostId.trim();
+        const hasRepost = normalizedRepostValue !== '' && normalizedRepostValue !== '0';
+
+        if (hasRepost && !isPositiveIntegerString(normalizedRepostValue)) {
             setStatusTone('error');
             setStatusMessage('Repost post ID must be a positive number.');
             return;
@@ -78,8 +92,9 @@ const CreatePost = () => {
 
         try {
             let repostId = null;
-            if (post.repostPostId) {
-                repostId = Number(post.repostPostId);
+            if (hasRepost) {
+                // Step 2: If user entered a repost id, verify the source post exists.
+                repostId = Number(normalizedRepostValue);
                 const { data: referencedPost, error: refError } = await supabase
                     .from(POSTS_TABLE)
                     .select('id')
@@ -87,15 +102,23 @@ const CreatePost = () => {
                     .single();
 
                 if (refError || !referencedPost) {
-                    setStatusTone('error');
-                    setStatusMessage('Repost reference was not found.');
-                    setSubmitting(false);
-                    return;
+                    // Mentor tip:
+                    // Optional features should not block the core happy path.
+                    // If the reference is missing, create the post anyway and leave it unthreaded.
+                    repostId = null;
+                    setStatusTone('info');
+                    setStatusMessage('Repost reference was not found, so this post was created as a standalone thread.');
                 }
             }
 
-            const imageUrl = await uploadImage();
+            const { imageUrl, warningMessage } = await uploadImage();
 
+            if (warningMessage) {
+                setStatusTone('info');
+                setStatusMessage(warningMessage);
+            }
+
+            // Step 3: Build one clean payload object so DB shape is explicit.
             const payload = {
                 title: post.title.trim(),
                 description: post.description.trim(),
@@ -109,7 +132,7 @@ const CreatePost = () => {
                 secret_key: post.secretKey.trim(),
             };
 
-            const { data, error } = await supabase.from(POSTS_TABLE).insert(payload).select().single();
+            const { error } = await supabase.from(POSTS_TABLE).insert(payload);
 
             if (error) {
                 setStatusTone('error');
@@ -118,8 +141,28 @@ const CreatePost = () => {
                 return;
             }
 
-            navigate(`/posts/${data.id}`);
+            // Some policy setups allow insert but not immediate row return.
+            // Fetch the newest post for this session user as a reliable redirect target.
+            const { data: newestPost } = await supabase
+                .from(POSTS_TABLE)
+                .select('id')
+                .eq('author_id', sessionUser.id)
+                .order('id', { ascending: false })
+                .limit(1)
+                .maybeSingle();
+
+            // Mentor tip:
+            // The returned ID is the easiest way to confirm the record really exists.
+            setStatusTone('info');
+            if (newestPost?.id) {
+                setStatusMessage(`Post created successfully. New post ID: ${newestPost.id}`);
+                navigate(`/posts/${newestPost.id}`);
+            } else {
+                setStatusMessage('Post created successfully. Redirecting to the feed.');
+                navigate('/posts');
+            }
         } catch (error) {
+            // Any upload or insert failures are normalized to one readable status message.
             setStatusTone('error');
             setStatusMessage(formatSupabaseError(error));
             setSubmitting(false);
@@ -183,12 +226,14 @@ const CreatePost = () => {
                         <label htmlFor="repostPostId">
                             Repost a previous post by ID
                             <input
-                                type="text"
+                                type="number"
                                 id="repostPostId"
                                 name="repostPostId"
+                                min="1"
+                                step="1"
                                 value={post.repostPostId}
                                 onChange={handleChange}
-                                placeholder="Example: 12"
+                                placeholder="Leave blank if none"
                             />
                         </label>
 
@@ -212,6 +257,10 @@ const CreatePost = () => {
                         accept="image/*"
                         onChange={(event) => setImageFile(event.target.files?.[0] ?? null)}
                     />
+                    <p className="field-helper">
+                        If the storage bucket is not configured yet, the post will still save and the image will be
+                        skipped.
+                    </p>
 
                     <label htmlFor="secretKey">Secret key for edit/delete authorization</label>
                     <input

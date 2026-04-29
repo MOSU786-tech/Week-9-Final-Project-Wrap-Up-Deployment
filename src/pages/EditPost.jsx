@@ -23,6 +23,7 @@ const EditPost = () => {
     useEffect(() => {
         const fetchPost = async () => {
             setLoading(true);
+            // Load current source-of-truth record before allowing edits.
             const { data, error } = await supabase.from(POSTS_TABLE).select('*').eq('id', id).single();
 
             if (error) {
@@ -44,6 +45,7 @@ const EditPost = () => {
     }, [id]);
 
     const isOwner = post?.author_id === sessionUser.id;
+    // Ownership gate: only original pseudo-user can edit/delete this post.
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -68,6 +70,7 @@ const EditPost = () => {
     };
 
     const validateSecret = () => {
+        // Secret key is a second gate layered on top of author ownership.
         if (!enteredKey.trim()) {
             setStatusTone('error');
             setStatusMessage('Enter the current secret key to continue.');
@@ -98,6 +101,7 @@ const EditPost = () => {
 
         try {
             const imageUrl = await uploadImage();
+            // Keep update payload explicit so accidental columns are never sent.
             const payload = {
                 title: post.title.trim(),
                 description: post.description.trim(),
@@ -109,6 +113,7 @@ const EditPost = () => {
             };
 
             if (newSecretKey.trim()) {
+                // Optional key rotation for improved control after sharing thread links.
                 payload.secret_key = newSecretKey.trim();
             }
 
@@ -141,6 +146,8 @@ const EditPost = () => {
         if (!window.confirm('Delete this post and all comments in its thread?')) {
             return;
         }
+
+        // Mentor tip: keep destructive actions behind both confirm + permission checks.
 
         setSaving(true);
 

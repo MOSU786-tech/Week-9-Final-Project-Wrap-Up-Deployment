@@ -9,6 +9,7 @@ export const getDefaultFeedSettings = () => ({
 });
 
 export const loadFeedSettings = () => {
+  // SSR guard: default settings are safe fallback for non-browser environments.
   if (typeof window === 'undefined') {
     return getDefaultFeedSettings();
   }
@@ -22,6 +23,8 @@ export const loadFeedSettings = () => {
 
   try {
     const parsed = JSON.parse(value);
+    // Mentor tip:
+    // Validate shape from localStorage to avoid runtime UI bugs caused by stale/invalid data.
     return {
       accentTheme: ['sunrise', 'teal', 'ember'].includes(parsed?.accentTheme)
         ? parsed.accentTheme
@@ -42,6 +45,7 @@ export const saveFeedSettings = (settings) => {
   window.localStorage.setItem(FEED_SETTINGS_STORAGE_KEY, JSON.stringify(settings));
 };
 
+// Basic detector: enough for common YouTube links in beginner projects.
 export const isYouTubeLink = (url = '') => /youtu\.be|youtube\.com/.test(url);
 
 export const toYouTubeEmbed = (url = '') => {
@@ -60,6 +64,7 @@ export const toYouTubeEmbed = (url = '') => {
 
     return '';
   } catch {
+    // If URL parsing fails, return empty and let UI render fallback link/no video.
     return '';
   }
 };

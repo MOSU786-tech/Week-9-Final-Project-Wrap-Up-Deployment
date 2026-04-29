@@ -54,6 +54,103 @@ create table if not exists public."Posts" (
   "betCount" integer not null default 0 check ("betCount" >= 0)
 );
 
+-- If Posts already existed from an earlier version, backfill any missing columns.
+alter table public."Posts" add column if not exists updated_at timestamptz not null default now();
+alter table public."Posts" add column if not exists title text;
+alter table public."Posts" add column if not exists description text;
+alter table public."Posts" add column if not exists author_label text;
+alter table public."Posts" add column if not exists author_id text;
+alter table public."Posts" add column if not exists secret_key text;
+alter table public."Posts" add column if not exists flag text not null default 'Question';
+alter table public."Posts" add column if not exists characteristic text not null default 'General';
+alter table public."Posts" add column if not exists image_url text not null default '';
+alter table public."Posts" add column if not exists video_url text not null default '';
+alter table public."Posts" add column if not exists repost_of bigint;
+alter table public."Posts" add column if not exists "betCount" integer not null default 0;
+
+-- Add FK only if it does not exist yet.
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'Posts_repost_of_fkey'
+  ) then
+    alter table public."Posts"
+      add constraint "Posts_repost_of_fkey"
+      foreign key (repost_of)
+      references public."Posts" (id)
+      on delete set null;
+  end if;
+end
+$$;
+
+-- Align defaults and required constraints for key fields in existing tables.
+alter table public."Posts" alter column flag set default 'Question';
+alter table public."Posts" alter column characteristic set default 'General';
+alter table public."Posts" alter column image_url set default '';
+alter table public."Posts" alter column video_url set default '';
+alter table public."Posts" alter column "betCount" set default 0;
+
+update public."Posts"
+set
+  title = coalesce(title, 'Untitled post'),
+  description = coalesce(description, ''),
+  author_label = coalesce(author_label, 'Pilot'),
+  author_id = coalesce(author_id, 'legacy-user'),
+  secret_key = coalesce(secret_key, 'legacy-key'),
+  flag = coalesce(flag, 'Question'),
+  characteristic = coalesce(characteristic, 'General'),
+  image_url = coalesce(image_url, ''),
+  video_url = coalesce(video_url, ''),
+  "betCount" = coalesce("betCount", 0)
+where
+  title is null
+  or description is null
+  or author_label is null
+  or author_id is null
+  or secret_key is null
+  or flag is null
+  or characteristic is null
+  or image_url is null
+  or video_url is null
+  or "betCount" is null;
+
+alter table public."Posts" alter column title set not null;
+alter table public."Posts" alter column description set not null;
+alter table public."Posts" alter column author_label set not null;
+alter table public."Posts" alter column author_id set not null;
+alter table public."Posts" alter column secret_key set not null;
+alter table public."Posts" alter column flag set not null;
+alter table public."Posts" alter column characteristic set not null;
+alter table public."Posts" alter column image_url set not null;
+alter table public."Posts" alter column video_url set not null;
+alter table public."Posts" alter column "betCount" set not null;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'Posts_flag_check'
+  ) then
+    alter table public."Posts"
+      add constraint "Posts_flag_check"
+      check (flag in ('Question', 'Opinion', 'Showcase', 'Resource'));
+  end if;
+
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'Posts_betCount_check'
+  ) then
+    alter table public."Posts"
+      add constraint "Posts_betCount_check"
+      check ("betCount" >= 0);
+  end if;
+end
+$$;
+
 alter table public."Posts" enable row level security;
 
 do $$
@@ -126,6 +223,43 @@ create table if not exists public."Comments" (
   author_label text not null,
   author_id text not null
 );
+
+-- If Comments already existed from an earlier version, backfill missing columns.
+alter table public."Comments" add column if not exists created_at timestamptz not null default now();
+alter table public."Comments" add column if not exists post_id bigint;
+alter table public."Comments" add column if not exists content text;
+alter table public."Comments" add column if not exists author_label text;
+alter table public."Comments" add column if not exists author_id text;
+
+update public."Comments"
+set
+  content = coalesce(content, ''),
+  author_label = coalesce(author_label, 'Pilot'),
+  author_id = coalesce(author_id, 'legacy-user')
+where
+  content is null
+  or author_label is null
+  or author_id is null;
+
+alter table public."Comments" alter column content set not null;
+alter table public."Comments" alter column author_label set not null;
+alter table public."Comments" alter column author_id set not null;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'Comments_post_id_fkey'
+  ) then
+    alter table public."Comments"
+      add constraint "Comments_post_id_fkey"
+      foreign key (post_id)
+      references public."Posts" (id)
+      on delete cascade;
+  end if;
+end
+$$;
 
 alter table public."Comments" enable row level security;
 

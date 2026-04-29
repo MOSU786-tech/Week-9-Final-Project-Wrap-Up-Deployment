@@ -34,6 +34,32 @@
     gap: 12px;
 }
 
+.display-name-form {
+    display: grid;
+    gap: 8px;
+}
+
+.display-name-form label {
+    color: var(--muted-text);
+    font-weight: 600;
+    font-size: 0.88rem;
+}
+
+.display-name-form__controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.display-name-form__controls input {
+    min-width: 210px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-card);
+    color: var(--text-main);
+    border-radius: 999px;
+    padding: 11px 14px;
+}
+
 .post-controls label {
     display: grid;
     gap: 8px;

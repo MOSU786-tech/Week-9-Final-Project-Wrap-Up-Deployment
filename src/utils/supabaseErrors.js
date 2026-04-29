@@ -9,7 +9,11 @@ export const formatSupabaseError = (error) => {
   const message = error.message ?? 'Something went wrong.';
 
   if (/relation|column|schema/i.test(message)) {
-    return 'Supabase could not find the expected Crewmates table or columns. Run the SQL in supabase-setup.sql, then refresh and try again.';
+    return 'Supabase could not find the expected database table or columns. Run the SQL in supabase-setup.sql, confirm the Posts/Comments/Crewmates tables exist, then refresh and try again.';
+  }
+
+  if (/bucket/i.test(message)) {
+    return 'Supabase could not find the expected storage bucket. Create the post-media bucket in Supabase Storage, then try again.';
   }
 
   return message;

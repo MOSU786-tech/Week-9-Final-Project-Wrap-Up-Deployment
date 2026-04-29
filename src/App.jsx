@@ -16,6 +16,8 @@ import PostDetailPage from './pages/PostDetailPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const App = () => {
+  // Mentor tip:
+  // Keep theme state at app-shell level so every route shares one consistent UI mode.
   const [themeMode, setThemeMode] = useState(() => {
     if (typeof window === 'undefined') {
       return 'light';
@@ -30,10 +32,13 @@ const App = () => {
   });
 
   useEffect(() => {
+    // Persisting both in DOM attr and localStorage gives fast theme restore on refresh.
     document.documentElement.setAttribute('data-theme', themeMode);
     window.localStorage.setItem('crewmates_theme_mode', themeMode);
   }, [themeMode]);
 
+  // Mentor tip:
+  // useRoutes keeps route config declarative and easy to extend for future pages.
   const element = useRoutes([
     {
       path: '/',
