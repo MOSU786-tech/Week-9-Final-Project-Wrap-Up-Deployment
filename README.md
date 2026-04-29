@@ -68,7 +68,11 @@ The following **additional** features are implemented:
 
 ## Video Walkthrough
 
-<img src="walkthrough.gif" title="Video Walkthrough" alt="Video Walkthrough" />
+Here's a walkthrough of implemented user stories:
+
+<img src='Week 9 Final Project Crewmates Post feed and Deployment.gif' title='Video Walkthrough' alt='Video Walkthrough' />
+
+GIF created with ScreenToGif
 
 ## Notes
 
