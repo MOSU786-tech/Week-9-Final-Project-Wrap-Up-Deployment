@@ -70,9 +70,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='Week%209%20Final%20Project%20Crewmates%20Post%20feed%20and%20Deployment%20walkthrough-.gif' title='Video Walkthrough' alt='Video Walkthrough' />
-![Video Walkthrough](https://raw.githubusercontent.com/MOSU786-tech/Week-9-Final-Project-Wrap-Up-Deployment/main/walkthrough.gif)
-GIF created with ScreenToGif
+
 
 ## Notes
 
