@@ -72,8 +72,6 @@ Here's a walkthrough of implemented user stories:
 
 <img src='Week%209%20Final%20Project%20Crewmates%20Post%20feed%20and%20Deployment%20walkthrough-.gif' title='Video Walkthrough' alt='Video Walkthrough' />
 
-[Open the walkthrough GIF directly](Week%209%20Final%20Project%20Crewmates%20Post%20feed%20and%20Deployment%20walkthrough-.gif)
-
 GIF created with ScreenToGif
 
 ## Notes
