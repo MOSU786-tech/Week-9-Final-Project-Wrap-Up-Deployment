@@ -68,14 +68,7 @@ The following **additional** features are implemented:
 
 ## Video Walkthrough
 
-Raw GitHub raw host:
-https://raw.githubusercontent.com/MOSU786-tech/Week-9-Final-Project-Wrap-Up-Deployment/main/walkthrough.gif
-
-GitHub raw URL (alternate):
-https://github.com/MOSU786-tech/Week-9-Final-Project-Wrap-Up-Deployment/raw/main/walkthrough.gif
-
-Here's a walkthrough of implemented user stories:
-
+![Video Walkthrough](walkthrough.gif)
 
 
 ## Notes
